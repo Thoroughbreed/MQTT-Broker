@@ -40,42 +40,21 @@ namespace MQTTBroker
                         WriteLine(" ---- Last 10 info:");
                         foreach (var logMessage in _LogMessages.Where(l => l.Topic.Contains("info")).Take(10))
                         {
-                            WriteLine(
-                                " TimeStamp: {0} -- Message: ClientId = {1}, Topic = {2}, Payload = {3}, QoS = {4}, Retain-Flag = {5}",
-                                DateTime.Now,
-                                logMessage.Timestamp.ToString(),
-                                logMessage.Client,
-                                logMessage.Message,
-                                logMessage.QoS,
-                                logMessage.Retain);
+                            PrintLog(logMessage);
                         }
 
                         WriteLine();
                         WriteLine(" ---- Last 10 critical:");
                         foreach (var logMessage in _LogMessages.Where(l => l.Topic.Contains("critical")).Take(10))
                         {
-                            WriteLine(
-                                " TimeStamp: {0} -- Message: ClientId = {1}, Topic = {2}, Payload = {3}, QoS = {4}, Retain-Flag = {5}",
-                                DateTime.Now,
-                                logMessage.Timestamp.ToString(),
-                                logMessage.Client,
-                                logMessage.Message,
-                                logMessage.QoS,
-                                logMessage.Retain);
+                            PrintLog(logMessage);
                         }
 
                         WriteLine();
                         WriteLine(" ---- Last 10 debug:");
                         foreach (var logMessage in _LogMessages.Where(l => l.Topic.Contains("debug")).Take(10))
                         {
-                            WriteLine(
-                                " TimeStamp: {0} -- Message: ClientId = {1}, Topic = {2}, Payload = {3}, QoS = {4}, Retain-Flag = {5}",
-                                DateTime.Now,
-                                logMessage.Timestamp.ToString(),
-                                logMessage.Client,
-                                logMessage.Message,
-                                logMessage.QoS,
-                                logMessage.Retain);
+                            PrintLog(logMessage);
                         }
                         break;
                     }
@@ -84,20 +63,24 @@ namespace MQTTBroker
                         WriteLine(" ---- Last 50:");
                         foreach (var logMessage in _LogMessages.Take(50))
                         {
-                            WriteLine(
-                                " TimeStamp: {0} -- Message: ClientId = {1}, Topic = {2}, Payload = {3}, QoS = {4}, Retain-Flag = {5}",
-                                DateTime.Now,
-                                logMessage.Timestamp.ToString(),
-                                logMessage.Client,
-                                logMessage.Message,
-                                logMessage.QoS,
-                                logMessage.Retain);
+                            PrintLog(logMessage);
                         }
                         break;
                     }
                 }
                 key = ReadKey(true);
             }
+        }
+        private static void PrintLog(LogMessage logMessage)
+        {
+            WriteLine(
+            " TimeStamp: {0} -- Message: ClientId = {1}, Topic = {2}, Payload = {3}, QoS = {4}, Retain-Flag = {5}",
+            DateTime.Now,
+            logMessage.Timestamp.ToString(),
+            logMessage.Client,
+            logMessage.Message,
+            logMessage.QoS,
+            logMessage.Retain);
         }
 
         private static Task ValidateConnectionAsync(ValidatingConnectionEventArgs args)
