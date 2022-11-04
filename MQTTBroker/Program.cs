@@ -2,6 +2,7 @@
 using MQTTnet.Server;
 using MQTTnet;
 using System.Text;
+using MQTTBroker.Helpers;
 using MQTTnet.Protocol;
 using Newtonsoft.Json;
 using static System.Console;
@@ -17,8 +18,7 @@ namespace MQTTBroker
 
         static async Task Main(string[] args)
         {
-            var currentPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty;
-            config = ReadConfiguration(currentPath);
+            config = ConfigHelper.ReadConfig();
             var option = new MqttServerOptionsBuilder().WithDefaultEndpoint();
 
             var server = new MqttFactory().CreateMqttServer(option.Build());
@@ -28,8 +28,7 @@ namespace MQTTBroker
 
 
             WriteLine("Press ENTER to quit, press L to show log - press A to show all logs (last 50)");
-            ConsoleKeyInfo key;
-            key = ReadKey(true);
+            ConsoleKeyInfo key = ReadKey(true);
             while (key.Key != ConsoleKey.Enter)
             {
                 Clear();
@@ -164,26 +163,6 @@ namespace MQTTBroker
                 Timestamp = DateTime.Now,
                 Topic = args.ApplicationMessage?.Topic
             });
-        }
-
-        private static Config ReadConfiguration(string currentPath)
-        {
-            var filePath = $"{currentPath}/config.json";
-
-            if (File.Exists(filePath))
-            {
-                Config config;
-                using (var r = new StreamReader(filePath))
-                {
-                    var json = r.ReadToEnd();
-                    config = JsonConvert.DeserializeObject<Config>(json) ?? new();
-                }
-
-
-                return config;
-            }
-
-            return new Config();
         }
     }
 }
