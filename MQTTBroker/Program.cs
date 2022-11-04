@@ -1,7 +1,9 @@
 ﻿using MQTTnet.Server;
 using MQTTnet;
 using System.Text;
+using MQTTBroker.Data;
 using MQTTBroker.Helpers;
+using MQTTBroker.Models;
 using MQTTnet.Protocol;
 using static System.Console;
 
@@ -11,9 +13,12 @@ namespace MQTTBroker
     {
         private static readonly List<string> ClientIdPrefixesUsed = new();
         private static Config config = new();
-
+        private static BrokerContext context = new();
+        
         static async Task Main(string[] args)
         {
+            context.Database.EnsureCreated();
+            
             config = ConfigHelper.ReadConfig();
             var option = new MqttServerOptionsBuilder()
                 .WithDefaultEndpoint();
@@ -26,7 +31,7 @@ namespace MQTTBroker
 
             // Keep application running until user press a key
             WriteLine("Press ENTER to quit.");
-            ReadLine():;
+            ReadLine();
         }
 
         private static Task ValidateConnectionAsync(ValidatingConnectionEventArgs args)
@@ -134,6 +139,7 @@ namespace MQTTBroker
                 ? null
                 : Encoding.UTF8.GetString(args.ApplicationMessage?.Payload);
 
+            LogMessageToDatabase(args, payload);
 
             WriteLine(
                 " TimeStamp: {0} -- Message: ClientId = {1}, Topic = {2}, Payload = {3}, QoS = {4}, Retain-Flag = {5}",
@@ -144,6 +150,23 @@ namespace MQTTBroker
                 args.ApplicationMessage?.QualityOfServiceLevel,
                 args.ApplicationMessage?.Retain);
             return Task.CompletedTask;
+        }
+        
+        private static void LogMessageToDatabase(InterceptingPublishEventArgs args, string? payload)
+        {
+            if (args.ApplicationMessage == null) return;
+
+            context.Messages.Add(new MqttMessage()
+            {
+                Payload = payload,
+                Retain = args.ApplicationMessage.Retain,
+                Timestamp = DateTime.Now,
+                Topic = args.ApplicationMessage.Topic,
+                ClientId = args.ClientId,
+                QoS = args.ApplicationMessage.QualityOfServiceLevel
+            });
+
+            context.SaveChanges();
         }
 
         private static string GetClientIdPrefix(string clientId)
