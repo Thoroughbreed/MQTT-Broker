@@ -1,12 +1,10 @@
-﻿using System.Reflection;
-using MQTTnet.Server;
+﻿using MQTTnet.Server;
 using MQTTnet;
 using System.Text;
+using MQTTBroker.Helpers;
 using MQTTnet.Protocol;
-using Newtonsoft.Json;
 using static System.Console;
 
-// See https://aka.ms/new-console-template for more information
 namespace MQTTBroker
 {
     internal class Program
@@ -16,8 +14,7 @@ namespace MQTTBroker
 
         static async Task Main(string[] args)
         {
-            var currentPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty;
-            config = ReadConfiguration(currentPath);
+            config = ConfigHelper.ReadConfig();
             var option = new MqttServerOptionsBuilder()
                 .WithDefaultEndpoint();
 
@@ -29,7 +26,7 @@ namespace MQTTBroker
 
             // Keep application running until user press a key
             WriteLine("Press ENTER to quit.");
-            ReadLine();
+            ReadLine():;
         }
 
         private static Task ValidateConnectionAsync(ValidatingConnectionEventArgs args)
@@ -160,26 +157,6 @@ namespace MQTTBroker
             }
 
             return string.Empty;
-        }
-
-        private static Config ReadConfiguration(string currentPath)
-        {
-            var filePath = $"{currentPath}/config.json";
-
-            if (File.Exists(filePath))
-            {
-                Config config;
-                using (var r = new StreamReader(filePath))
-                {
-                    var json = r.ReadToEnd();
-                    config = JsonConvert.DeserializeObject<Config>(json) ?? new();
-                }
-
-
-                return config;
-            }
-
-            return new Config();
         }
     }
 }
