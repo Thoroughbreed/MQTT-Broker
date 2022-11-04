@@ -5,6 +5,10 @@
       "UserName": "ardui",
       "Password": "s1hif-xp!sT-qCuwu",
       "ClientIdPrefix": "House_"
+    },
+    {
+      "UserName": "Test",
+      "Password": "test"
     }
   ]
 }
