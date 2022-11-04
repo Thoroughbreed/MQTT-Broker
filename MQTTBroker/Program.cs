@@ -10,7 +10,6 @@ namespace MQTTBroker
 {
     internal class Program
     {
-        private static readonly List<string> ClientIdPrefixesUsed = new();
         private static Config config = new();
         private static BrokerContext _context = new();
 
