@@ -9,7 +9,14 @@
 
     <ItemGroup>
       <PackageReference Include="MQTTnet" Version="4.1.2.350" />
+      <PackageReference Include="MySql.EntityFrameworkCore" Version="6.0.7" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="config.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>

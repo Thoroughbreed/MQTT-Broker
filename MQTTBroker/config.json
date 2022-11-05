@@ -7,8 +7,9 @@
       "ClientIdPrefix": "House_"
     },
     {
-      "UserName": "test",
+      "UserName": "Test",
       "Password": "test"
     }
-  ]
+  ],
+  "ConnectionString": "server=172.19.140.140;port=3306;database=mqtt-broker;user=user;password=P@ssw0rd"
 }

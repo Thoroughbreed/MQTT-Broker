@@ -1,35 +1,86 @@
-﻿using System.Reflection;
-using MQTTnet.Server;
+﻿using MQTTnet.Server;
 using MQTTnet;
 using System.Text;
+using MQTTBroker.Data;
+using MQTTBroker.Helpers;
 using MQTTnet.Protocol;
-using Newtonsoft.Json;
 using static System.Console;
 
-// See https://aka.ms/new-console-template for more information
 namespace MQTTBroker
 {
     internal class Program
     {
-        private static readonly List<string> ClientIdPrefixesUsed = new();
         private static Config config = new();
+        private static BrokerContext _context = new();
 
+        
         static async Task Main(string[] args)
         {
-            var currentPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty;
-            config = ReadConfiguration(currentPath);
-            var option = new MqttServerOptionsBuilder()
-                .WithDefaultEndpoint();
+            _context.Database.EnsureCreated();
+            
+            config = ConfigHelper.ReadConfig();
+            var option = new MqttServerOptionsBuilder().WithDefaultEndpoint();
 
-            // Create a new mqtt server 
             var server = new MqttFactory().CreateMqttServer(option.Build());
             server.InterceptingPublishAsync += Server_InterceptingPublishAsync;
             server.ValidatingConnectionAsync += ValidateConnectionAsync;
             await server.StartAsync();
 
-            // Keep application running until user press a key
-            WriteLine("Press ENTER to quit.");
-            ReadLine();
+
+            WriteLine("Press ENTER to quit, press L to show log - press A to show all logs (last 50)");
+            ConsoleKeyInfo key = ReadKey(true);
+            while (key.Key != ConsoleKey.Enter)
+            {
+                Clear();
+                switch (key.Key)
+                {
+                    case ConsoleKey.L:
+                    {
+                        WriteLine();
+                        WriteLine(" ---- Last 10 info:");
+                        foreach (var logMessage in _context.Messages.Where(l => l.Topic.Contains("info")).Take(10))
+                        {
+                            PrintLog(logMessage);
+                        }
+
+                        WriteLine();
+                        WriteLine(" ---- Last 10 critical:");
+                        foreach (var logMessage in _context.Messages.Where(l => l.Topic.Contains("critical")).Take(10))
+                        {
+                            PrintLog(logMessage);
+                        }
+
+                        WriteLine();
+                        WriteLine(" ---- Last 10 debug:");
+                        foreach (var logMessage in _context.Messages.Where(l => l.Topic.Contains("debug")).Take(10))
+                        {
+                            PrintLog(logMessage);
+                        }
+                        break;
+                    }
+                    case ConsoleKey.A:
+                    {
+                        WriteLine(" ---- Last 50:");
+                        foreach (var logMessage in _context.Messages.Take(50))
+                        {
+                            PrintLog(logMessage);
+                        }
+                        break;
+                    }
+                }
+                key = ReadKey(true);
+            }
+        }
+        private static void PrintLog(LogMessage logMessage)
+        {
+            WriteLine(
+            " TimeStamp: {0} -- Message: ClientId = {1}, Topic = {2}, Payload = {3}, QoS = {4}, Retain-Flag = {5}",
+            DateTime.Now,
+            logMessage.Timestamp.ToString(),
+            logMessage.Client,
+            logMessage.Message,
+            logMessage.QoS,
+            logMessage.Retain);
         }
 
         private static Task ValidateConnectionAsync(ValidatingConnectionEventArgs args)
@@ -38,148 +89,65 @@ namespace MQTTBroker
             {
                 var currentUser = config.Users.FirstOrDefault(u => u.UserName == args.UserName);
 
+
                 if (currentUser == null)
                 {
                     args.ReasonCode = MqttConnectReasonCode.BadUserNameOrPassword;
-                    WriteLine("currentUser == Null");
-                    // LogMessage(args, true);
                     return Task.CompletedTask;
                 }
 
                 if (args.UserName != currentUser.UserName)
                 {
                     args.ReasonCode = MqttConnectReasonCode.BadUserNameOrPassword;
-                    WriteLine("UserName != UserName");
-                    // LogMessage(args, true);
                     return Task.CompletedTask;
                 }
 
                 if (args.Password != currentUser.Password)
                 {
                     args.ReasonCode = MqttConnectReasonCode.BadUserNameOrPassword;
-                    WriteLine("Password != Password");
-                    // LogMessage(args, true);
                     return Task.CompletedTask;
-                }
-
-                if (!currentUser.ValidateClientId)
-                {
-                    args.ReasonCode = MqttConnectReasonCode.Success;
-                    args.SessionItems.Add(args.ClientId, currentUser);
-                    WriteLine("!ValidateClientID");
-                    WriteLine(currentUser.ClientId);
-                    WriteLine(currentUser.ClientIdPrefix);
-                    // LogMessage(args, false);
-                    return Task.CompletedTask;
-                }
-
-                if (string.IsNullOrWhiteSpace(currentUser.ClientIdPrefix))
-                {
-                    if (args.ClientId != currentUser.ClientId)
-                    {
-                        args.ReasonCode = MqttConnectReasonCode.BadUserNameOrPassword;
-                        WriteLine("Bad username or pwd");
-                        // LogMessage(args, true);
-                        return Task.CompletedTask;
-                    }
-
-                    args.SessionItems.Add(currentUser.ClientId, currentUser);
-                }
-                else
-                {
-                    if (!ClientIdPrefixesUsed.Contains(currentUser.ClientIdPrefix))
-                    {
-                        ClientIdPrefixesUsed.Add(currentUser.ClientIdPrefix);
-                    }
-
-                    args.SessionItems.Add(currentUser.ClientIdPrefix, currentUser);
                 }
 
                 args.ReasonCode = MqttConnectReasonCode.Success;
                 WriteLine("yay!");
-                // LogMessage(args, false);
                 return Task.CompletedTask;
             }
             catch (Exception ex)
             {
-                // Logger.Error("An error occurred: {Exception}.", ex);
                 return Task.FromException(ex);
             }
         }
 
         static Task Server_InterceptingPublishAsync(InterceptingPublishEventArgs args)
         {
-            WriteLine(args.ClientId);
-            var clientIdPrefix = GetClientIdPrefix(args.ClientId);
             User? currentUser = null;
 
-            if (string.IsNullOrWhiteSpace(clientIdPrefix))
-            {
-                if (args.SessionItems.Contains(args.ClientId))
-                {
-                    currentUser = args.SessionItems[args.ClientId] as User;
-                    WriteLine(currentUser.ClientId);
-                    WriteLine(currentUser.ClientIdPrefix);
-                }
-            }
-            else
-            {
-                if (args.SessionItems.Contains(clientIdPrefix))
-                {
-                    currentUser = args.SessionItems[clientIdPrefix] as User;
-                    WriteLine(currentUser.ClientId);
-                    WriteLine(currentUser.ClientIdPrefix);
-                }
-            }
-            
-            // Convert Payload to string
             var payload = args.ApplicationMessage?.Payload == null
                 ? null
                 : Encoding.UTF8.GetString(args.ApplicationMessage?.Payload);
 
-
-            WriteLine(
-                " TimeStamp: {0} -- Message: ClientId = {1}, Topic = {2}, Payload = {3}, QoS = {4}, Retain-Flag = {5}",
-                DateTime.Now,
-                args.ClientId,
-                args.ApplicationMessage?.Topic,
-                payload,
-                args.ApplicationMessage?.QualityOfServiceLevel,
-                args.ApplicationMessage?.Retain);
+            LogMessages(args, payload);
             return Task.CompletedTask;
         }
 
-        private static string GetClientIdPrefix(string clientId)
+        private static void LogMessages(InterceptingPublishEventArgs args, string payload)
         {
-            foreach (var clientIdPrefix in ClientIdPrefixesUsed)
+            Clear();
+            SetCursorPosition(0, 3);
+            WriteLine("Press ENTER to quit, press L to show log - press A to show all logs (last 50)");
+            Write("Amount: ");
+            Write(_context.Messages.Count());
+            _context.Messages.Add(new LogMessage
             {
-                if (clientId.StartsWith(clientIdPrefix))
-                {
-                    return clientIdPrefix;
-                }
-            }
+                Client = args.ClientId,
+                Message = payload,
+                QoS = args.ApplicationMessage?.QualityOfServiceLevel,
+                Retain = (bool)args.ApplicationMessage?.Retain,
+                Timestamp = DateTime.Now,
+                Topic = args.ApplicationMessage?.Topic
+            });
 
-            return string.Empty;
-        }
-
-        private static Config ReadConfiguration(string currentPath)
-        {
-            var filePath = $"{currentPath}/config.json";
-
-            if (File.Exists(filePath))
-            {
-                Config config;
-                using (var r = new StreamReader(filePath))
-                {
-                    var json = r.ReadToEnd();
-                    config = JsonConvert.DeserializeObject<Config>(json) ?? new();
-                }
-
-
-                return config;
-            }
-
-            return new Config();
+            _context.SaveChanges();
         }
     }
 }
