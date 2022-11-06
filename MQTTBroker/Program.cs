@@ -75,9 +75,10 @@ namespace MQTTBroker
         {
             WriteLine(
             " TimeStamp: {0} -- Message: ClientId = {1}, Topic = {2}, Payload = {3}, QoS = {4}, Retain-Flag = {5}",
-            DateTime.Now,
+            
             logMessage.Timestamp.ToString(),
             logMessage.Client,
+            logMessage.Topic,
             logMessage.Message,
             logMessage.QoS,
             logMessage.Retain);
