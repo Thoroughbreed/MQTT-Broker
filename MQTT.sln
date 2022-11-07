@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MQTTBroker", "MQTTBroker\MQTTBroker.csproj", "{F42919DE-AD4B-4D4D-9497-E27E4C7A3D48}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MQTTAPI", "MQTTAPI\MQTTAPI.csproj", "{2F1AD905-254E-4DE7-90A9-A23AFE3DBB3F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{F42919DE-AD4B-4D4D-9497-E27E4C7A3D48}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F42919DE-AD4B-4D4D-9497-E27E4C7A3D48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F42919DE-AD4B-4D4D-9497-E27E4C7A3D48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F1AD905-254E-4DE7-90A9-A23AFE3DBB3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F1AD905-254E-4DE7-90A9-A23AFE3DBB3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F1AD905-254E-4DE7-90A9-A23AFE3DBB3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F1AD905-254E-4DE7-90A9-A23AFE3DBB3F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
