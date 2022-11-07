@@ -21,7 +21,7 @@
 ### Roadmap
 - [X] Create a custom mqtt-broker 
 - [X] Create a database for it to store relevant topics in
-- [ ] Create an API
+- [X] Create an API
 
 ### License
 * GPLv3
