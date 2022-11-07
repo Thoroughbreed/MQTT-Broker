@@ -35,7 +35,32 @@ app.UseAuthorization();
 // Smoke test
 app.MapGet("/", () => "Hello World.");
 
-app.MapGet("/all", async (APIContext db) => await db.Messages.AsNoTracking().ToListAsync());
-app.MapGet("/publish", async (IMQTTService service) => await service.Publish());
+app.MapGet("/all", async (APIContext db) => await db.Messages
+    .AsNoTracking()
+    .OrderByDescending(m => m.Id)
+    .Take(50)
+    .ToListAsync());
+
+app.MapGet("/info", async (APIContext db) => await db.Messages
+    .AsNoTracking()
+    .Where(m => m.Topic.Contains("info"))
+    .OrderByDescending(m => m.Id)
+    .Take(50)
+    .ToListAsync());
+
+app.MapGet("/debug", async (APIContext db) => await db.Messages
+    .AsNoTracking()
+    .Where(m => m.Topic.Contains("debug"))
+    .OrderByDescending(m => m.Id)
+    .Take(50)
+    .ToListAsync());
+
+app.MapGet("/critical", async (APIContext db) => await db.Messages
+    .AsNoTracking()
+    .Where(m => m.Topic.Contains("critical"))
+    .OrderByDescending(m => m.Id)
+    .Take(50)
+    .ToListAsync());
+// app.MapGet("/publish", async (IMQTTService service) => await service.Publish());
 
 app.Run();
