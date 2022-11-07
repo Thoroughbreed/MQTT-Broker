@@ -1,0 +1,11 @@
+{
+  "Users": [
+    {
+      "ClientID": "House_API",
+      "Username": "ardui",
+      "Password": "s1hif-xp!sT-qCuwu"
+    }
+],
+  "Port": 8393,
+  "ConnectionString": "server=192.168.2.20;port=3306;database=IntelliHouse;user=api;password=P@ssw0rd"
+}

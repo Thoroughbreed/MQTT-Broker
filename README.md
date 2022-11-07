@@ -20,14 +20,15 @@
 
 ### Roadmap
 - [X] Create a custom mqtt-broker 
-- [ ] Create a database for it to store relevant topics in
-- [ ] Create an API
+- [X] Create a database for it to store relevant topics in
+- [X] Create an API
 
 ### License
 * GPLv3
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ### Contact
+- Nicolai Heuck - nicolaiheuck@gmail.com
 - Jan Andreasen - jan@tved.it
   - [![Twitter][twitter-shield]][twitter-url]
 

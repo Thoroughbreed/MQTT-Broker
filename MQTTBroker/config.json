@@ -11,5 +11,5 @@
       "Password": "test"
     }
   ],
-  "ConnectionString": "server=172.19.140.140;port=3306;database=mqtt-broker;user=user;password=P@ssw0rd"
+  "ConnectionString": "server=192.168.2.20;port=3306;database=IntelliHouse;user=intellihouse;password=p@ssw0rd"
 }
