@@ -18,9 +18,10 @@ var app = builder.Build();
 
 var config = ConfigHelper.ReadConfig();
 var port = config.Port;
+var secPort = config.SecPort;
 
 app.Urls.Add($"http://*:{port}");
-
+// app.Urls.Add($"https://*:{secPort}");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -51,6 +52,13 @@ app.MapGet("/info", async (APIContext db) => await db.Messages
 app.MapGet("/debug", async (APIContext db) => await db.Messages
     .AsNoTracking()
     .Where(m => m.Topic.Contains("debug"))
+    .OrderByDescending(m => m.Id)
+    .Take(50)
+    .ToListAsync());
+
+app.MapGet("/system", async (APIContext db) => await db.Messages
+    .AsNoTracking()
+    .Where(m => m.Topic.Contains("system"))
     .OrderByDescending(m => m.Id)
     .Take(50)
     .ToListAsync());

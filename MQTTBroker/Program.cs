@@ -38,21 +38,21 @@ namespace MQTTBroker
                     {
                         WriteLine();
                         WriteLine(" ---- Last 10 info:");
-                        foreach (var logMessage in _context.Messages.Where(l => l.Topic.Contains("info")).Take(10))
+                        foreach (var logMessage in _context.Messages.Where(l => l.Topic.Contains("info")).OrderByDescending(l => l.Timestamp).Take(10))
                         {
                             PrintLog(logMessage);
                         }
 
                         WriteLine();
                         WriteLine(" ---- Last 10 critical:");
-                        foreach (var logMessage in _context.Messages.Where(l => l.Topic.Contains("critical")).Take(10))
+                        foreach (var logMessage in _context.Messages.Where(l => l.Topic.Contains("critical")).OrderByDescending(l => l.Timestamp).Take(10))
                         {
                             PrintLog(logMessage);
                         }
 
                         WriteLine();
                         WriteLine(" ---- Last 10 debug:");
-                        foreach (var logMessage in _context.Messages.Where(l => l.Topic.Contains("debug")).Take(10))
+                        foreach (var logMessage in _context.Messages.Where(l => l.Topic.Contains("debug")).OrderByDescending(l => l.Timestamp).Take(10))
                         {
                             PrintLog(logMessage);
                         }
@@ -61,7 +61,7 @@ namespace MQTTBroker
                     case ConsoleKey.A:
                     {
                         WriteLine(" ---- Last 50:");
-                        foreach (var logMessage in _context.Messages.Take(50))
+                        foreach (var logMessage in _context.Messages.OrderByDescending(l => l.Timestamp).Take(50))
                         {
                             PrintLog(logMessage);
                         }

@@ -11,5 +11,5 @@
       "Password": "test"
     }
   ],
-  "ConnectionString": "server=192.168.2.20;port=3306;database=IntelliHouse;user=intellihouse;password=p@ssw0rd"
+  "ConnectionString": "server=localhost;port=3306;database=IntelliHouse;user=intellihouse;password=p@ssw0rd"
 }
