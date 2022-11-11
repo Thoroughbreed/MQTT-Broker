@@ -99,7 +99,8 @@ app.MapGet("/kitchen", async (APIContext db, DateTime ts) =>
             result.Add(new Measurements
             {
                 Temperature = Convert.ToDecimal(temp[i].Message, decimalPoint), 
-                Humidity = Convert.ToDouble(humid[i].Message, decimalPoint)
+                Humidity = Convert.ToDouble(humid[i].Message, decimalPoint),
+                Timestamp = humid[i].Timestamp
             });
         }
     }
@@ -134,7 +135,8 @@ app.MapGet("/bedroom", async (APIContext db, DateTime ts) =>
             result.Add(new Measurements
             {
                 Temperature = Convert.ToDecimal(temp[i].Message, decimalPoint), 
-                Humidity = Convert.ToDouble(humid[i].Message, decimalPoint)
+                Humidity = Convert.ToDouble(humid[i].Message, decimalPoint),
+                Timestamp = humid[i].Timestamp
             });
         }
     }
@@ -169,7 +171,8 @@ app.MapGet("/livingroom", async (APIContext db, DateTime ts) =>
             result.Add(new Measurements
             {
                 Temperature = Convert.ToDecimal(temp[i].Message, decimalPoint), 
-                Humidity = Convert.ToDouble(humid[i].Message, decimalPoint)
+                Humidity = Convert.ToDouble(humid[i].Message, decimalPoint),
+                Timestamp = humid[i].Timestamp
             });
         }
     }
@@ -181,6 +184,21 @@ app.MapGet("/livingroom", async (APIContext db, DateTime ts) =>
     
     return result;
 });
+
+app.MapGet("/airq", async (APIContext db) =>
+{
+    var qual = await db.Messages
+        .AsNoTracking()
+        .Where(m => m.Topic.Contains("airquality"))
+        .OrderByDescending(m => m.Id)
+        .Take(30)
+        .ToListAsync();
+    
+    List<AirQuality> result = qual.Select(t => new AirQuality { Quality = Convert.ToInt16(t.Message), Timestamp = t.Timestamp }).ToList();
+
+    return result;
+});
+
 // app.MapGet("/publish", async (IMQTTService service) => await service.Publish());
 
 app.Run();
