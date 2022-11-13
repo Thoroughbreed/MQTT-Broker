@@ -94,7 +94,7 @@ app.MapGet("/kitchen", async (APIContext db, DateTime ts) =>
         .ToListAsync();
     try
     {
-        for (int i = 0; i < temp.Count || i < humid.Count; i++)
+        for (int i = 0; i < temp.Count && i < humid.Count; i++)
         {
             result.Add(new Measurements
             {
@@ -130,7 +130,7 @@ app.MapGet("/bedroom", async (APIContext db, DateTime ts) =>
         .ToListAsync();
     try
     {
-        for (int i = 0; i < temp.Count || i < humid.Count ; i++)
+        for (int i = 0; i < temp.Count && i < humid.Count ; i++)
         {
             result.Add(new Measurements
             {
@@ -166,7 +166,7 @@ app.MapGet("/livingroom", async (APIContext db, DateTime ts) =>
         .ToListAsync();
     try
     {
-        for (int i = 0; i < temp.Count || i < humid.Count; i++)
+        for (int i = 0; i < temp.Count && i < humid.Count; i++)
         {
             result.Add(new Measurements
             {
