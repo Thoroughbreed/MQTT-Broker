@@ -1,0 +1,30 @@
+services:
+  broker:
+    ports:
+      - 1883:1883
+      - 8883:1883
+    build:
+      context: .
+      dockerfile: MQTTBroker/Dockerfile
+    tty: true
+    stdin_open: true
+    depends_on:
+      - mariadb
+  api:
+    ports:
+      - 80:8393
+      - 443:8394
+    build:
+      context: .
+      dockerfile: MQTTAPI/Dockerfile
+    depends_on:
+      - mariadb
+  mariadb:
+      image: mariadb/server
+      expose:
+        - 3306
+      environment:
+        MARIADB_ROOT_PASSWORD: "super-secret-root-password"
+        MARIADB_DATABASE: "IntelliHouse"
+        MARIADB_USER: "IntelliHouse-User"
+        MARIADB_PASSWORD: "P@ssw0rd"
