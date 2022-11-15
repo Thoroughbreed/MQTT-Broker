@@ -113,6 +113,84 @@ app.MapGet("/kitchen", async (APIContext db, DateTime ts) =>
     return result;
 });
 
+app.MapGet("/kitchen/1", async (APIContext db) =>
+{
+    Measurements result = new();
+    var temp = await db.Messages
+        .AsNoTracking()
+        .Where(m => m.Topic.Contains("kitchen/temp"))
+        .OrderByDescending(m => m.Id)
+        .FirstOrDefaultAsync();
+    var humid = await db.Messages
+        .AsNoTracking()
+        .Where(m => m.Topic.Contains("kitchen/humid"))
+        .OrderByDescending(m => m.Id)
+        .FirstOrDefaultAsync();
+    try
+    {
+        result.Temperature = Convert.ToDecimal(temp.Message);
+        result.Humidity = Convert.ToDouble(humid.Message);
+        result.Timestamp = temp.Timestamp;
+    }
+    catch (Exception)
+    {
+        // ignored
+    }
+    return result;
+});
+
+app.MapGet("/bedroom/1", async (APIContext db) =>
+{
+    Measurements result = new();
+    var temp = await db.Messages
+        .AsNoTracking()
+        .Where(m => m.Topic.Contains("bedroom/temp"))
+        .OrderByDescending(m => m.Id)
+        .FirstOrDefaultAsync();
+    var humid = await db.Messages
+        .AsNoTracking()
+        .Where(m => m.Topic.Contains("bedroom/humid"))
+        .OrderByDescending(m => m.Id)
+        .FirstOrDefaultAsync();
+    try
+    {
+        result.Temperature = Convert.ToDecimal(temp.Message);
+        result.Humidity = Convert.ToDouble(humid.Message);
+        result.Timestamp = temp.Timestamp;
+    }
+    catch (Exception)
+    {
+        // ignored
+    }
+    return result;
+});
+
+app.MapGet("/livingroom/1", async (APIContext db) =>
+{
+    Measurements result = new();
+    var temp = await db.Messages
+        .AsNoTracking()
+        .Where(m => m.Topic.Contains("livingroom/temp"))
+        .OrderByDescending(m => m.Id)
+        .FirstOrDefaultAsync();
+    var humid = await db.Messages
+        .AsNoTracking()
+        .Where(m => m.Topic.Contains("livingroom/humid"))
+        .OrderByDescending(m => m.Id)
+        .FirstOrDefaultAsync();
+    try
+    {
+        result.Temperature = Convert.ToDecimal(temp.Message);
+        result.Humidity = Convert.ToDouble(humid.Message);
+        result.Timestamp = temp.Timestamp;
+    }
+    catch (Exception)
+    {
+        // ignored
+    }
+    return result;
+});
+
 app.MapGet("/bedroom", async (APIContext db, DateTime ts) =>
 {
     List<Measurements> result = new();
