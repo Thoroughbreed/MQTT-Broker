@@ -128,8 +128,8 @@ app.MapGet("/kitchen/1", async (APIContext db) =>
         .FirstOrDefaultAsync();
     try
     {
-        result.Temperature = Convert.ToDecimal(temp.Message);
-        result.Humidity = Convert.ToDouble(humid.Message);
+        result.Temperature = Convert.ToDecimal(temp.Message, decimalPoint);
+        result.Humidity = Convert.ToDouble(humid.Message, decimalPoint);
         result.Timestamp = temp.Timestamp;
     }
     catch (Exception)
@@ -154,8 +154,8 @@ app.MapGet("/bedroom/1", async (APIContext db) =>
         .FirstOrDefaultAsync();
     try
     {
-        result.Temperature = Convert.ToDecimal(temp.Message);
-        result.Humidity = Convert.ToDouble(humid.Message);
+        result.Temperature = Convert.ToDecimal(temp.Message, decimalPoint);
+        result.Humidity = Convert.ToDouble(humid.Message, decimalPoint);
         result.Timestamp = temp.Timestamp;
     }
     catch (Exception)
@@ -180,8 +180,8 @@ app.MapGet("/livingroom/1", async (APIContext db) =>
         .FirstOrDefaultAsync();
     try
     {
-        result.Temperature = Convert.ToDecimal(temp.Message);
-        result.Humidity = Convert.ToDouble(humid.Message);
+        result.Temperature = Convert.ToDecimal(temp.Message, decimalPoint);
+        result.Humidity = Convert.ToDouble(humid.Message, decimalPoint);
         result.Timestamp = temp.Timestamp;
     }
     catch (Exception)
