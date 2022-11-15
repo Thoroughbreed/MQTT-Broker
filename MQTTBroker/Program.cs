@@ -60,8 +60,8 @@ namespace MQTTBroker
                     }
                     case ConsoleKey.A:
                     {
-                        WriteLine(" ---- Last 50:");
-                        foreach (var logMessage in _context.Messages.OrderByDescending(l => l.Timestamp).Take(50))
+                        WriteLine(" ---- Last 100:");
+                        foreach (var logMessage in _context.Messages.OrderByDescending(l => l.Timestamp).Take(100))
                         {
                             PrintLog(logMessage);
                         }
