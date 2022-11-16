@@ -29,11 +29,14 @@ builder.Services.AddAuthentication(options =>
 
 var app = builder.Build();
 
+app.Services.GetService<DbContext>()?.Database.EnsureCreated();
+
 var config = ConfigHelper.ReadConfig();
 var port = config.Port;
 var secPort = config.SecPort;
 
 app.Urls.Add($"http://*:{port}");
+// Configure the HTTP request pipeline.
 // app.Urls.Add($"https://*:{secPort}");
 
 if (app.Environment.IsDevelopment())

@@ -9,4 +9,5 @@
   "Port": 8393,
   "SecPort": 8394,
   "ConnectionString": "server=192.168.2.20;port=3306;database=IntelliHouse;user=api;password=P@ssw0rd"
+//  "ConnectionString": "server=mariadb;port=3306;database=IntelliHouse;user=IntelliHouse-User;password=P@ssw0rd" // Used for docker-compose
 }
