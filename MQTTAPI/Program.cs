@@ -289,4 +289,16 @@ app.MapGet("/airq", async (APIContext db) =>
     return result;
 }).RequireAuthorization();
 
+app.MapGet("airq/1", async (APIContext db) =>
+{
+    var qual = await db.Messages
+        .AsNoTracking()
+        .Where(m => m.Topic.Contains("airquality"))
+        .OrderByDescending(m => m.Id)
+        .FirstOrDefaultAsync();
+    return qual != null 
+        ? new AirQuality { Quality = Convert.ToInt16(qual.Message), Timestamp = qual.Timestamp } 
+        : new AirQuality{ Quality = 0, Timestamp = DateTime.Now };
+}).RequireAuthorization();
+
 app.Run();
