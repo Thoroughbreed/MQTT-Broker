@@ -45,12 +45,10 @@ public class ClimateController
         {
             for (int i = 0; i < temp.Count && i < humid.Count; i++)
             {
-                decimal.TryParse(temp[i].Message, out decimal temperature);
-                double.TryParse(humid[i].Message, out double humidity);
                 var measurement = new Measurements
                 {
-                    Temperature = temperature,
-                    Humidity = humidity,
+                    Temperature = ParseDecimal(temp[i].Message),
+                    Humidity = ParseDecimal(humid[i].Message),
                     Timestamp = humid[i].Timestamp
                 };
 
@@ -86,10 +84,8 @@ public class ClimateController
                             .FirstOrDefaultAsync();
         try
         {
-            decimal.TryParse(temp.Message, out decimal temperature);
-            double.TryParse(humid.Message, out double humidity);
-            result.Temperature = temperature;
-            result.Humidity = humidity;
+            result.Temperature = ParseDecimal(temp.Message);
+            result.Humidity = ParseDecimal(humid.Message);
             result.Timestamp = temp.Timestamp;
         }
         catch (Exception)
@@ -124,14 +120,15 @@ public class ClimateController
         {
             for (int i = 0; i < temp.Count && i < humid.Count ; i++)
             {
-                decimal.TryParse(temp[i].Message, out decimal temperature);
-                double.TryParse(humid[i].Message, out double humidity);
-                result.Add(new Measurements
+              
+                var measurement = new Measurements
                 {
-                    Temperature = temperature, 
-                    Humidity = humidity,
+                    Temperature = ParseDecimal(temp[i].Message),
+                    Humidity = ParseDecimal(humid[i].Message),
                     Timestamp = humid[i].Timestamp
-                });
+                };
+                
+                result.Add(measurement);
             }
         }
         catch (Exception e)
@@ -163,10 +160,8 @@ public class ClimateController
                             .FirstOrDefaultAsync();
         try
         {
-            decimal.TryParse(temp.Message, out decimal temperature);
-            double.TryParse(humid.Message, out double humidity);
-            result.Temperature = temperature;
-            result.Humidity = humidity;
+            result.Temperature = ParseDecimal(temp.Message);
+            result.Humidity = ParseDecimal(humid.Message);
             result.Timestamp = temp.Timestamp;
         }
         catch (Exception)
@@ -201,14 +196,14 @@ public class ClimateController
         {
             for (int i = 0; i < temp.Count && i < humid.Count; i++)
             {
-                decimal.TryParse(temp[i].Message, out decimal temperature);
-                double.TryParse(humid[i].Message, out double humidity);
-                result.Add(new Measurements
+                var measurement = new Measurements
                 {
-                    Temperature = temperature, 
-                    Humidity = humidity,
+                    Temperature = ParseDecimal(temp[i].Message),
+                    Humidity = ParseDecimal(humid[i].Message),
                     Timestamp = humid[i].Timestamp
-                });
+                };
+                
+                result.Add(measurement);
             }
         }
         catch (Exception e)
@@ -240,10 +235,8 @@ public class ClimateController
                             .FirstOrDefaultAsync();
         try
         {
-            decimal.TryParse(temp.Message, out decimal temperature);
-            double.TryParse(humid.Message, out double humidity);
-            result.Temperature = temperature;
-            result.Humidity = humidity;
+            result.Temperature = ParseDecimal(temp.Message);
+            result.Humidity = ParseDecimal(humid.Message);
             result.Timestamp = temp.Timestamp;
         }
         catch (Exception)
@@ -298,5 +291,12 @@ public class ClimateController
         return qual != null 
                ? new AirQuality { Quality = quality, Timestamp = qual.Timestamp } 
                : new AirQuality{ Quality = 0, Timestamp = DateTime.Now };
+    }
+    
+    private decimal ParseDecimal(string value)
+    {
+        decimal.TryParse(value, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal decimalValue);
+
+        return decimalValue;
     }
 }
