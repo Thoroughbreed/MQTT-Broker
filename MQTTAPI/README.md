@@ -13,8 +13,8 @@
   <summary>Table of Contents</summary>
   <ol>
     <li><a href="#summary">Summary</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#endpoints">Endpoints</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
@@ -26,6 +26,7 @@ The API is built upon the custom MQTT broker attached to the same database.
 The API can run idependently, thus not needing the broker.
 
 The API requires authentication to connect to it, the only endpoint that is available (for testing) is /
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 ### Endpoints
 | Endpoint | Protocol | Parameters |  Return | Description |
@@ -43,12 +44,14 @@ The API requires authentication to connect to it, the only endpoint that is avai
 | /debug | GET | N/A | List of logs | Returns the last 50 debug-level logs |
 | /system | GET | N/A | List of logs | Returns the last 50 critical-level logs |
 | /critical | GET | N/A | List of logs | Returns the last 50 system-level logs |
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 
 ### Roadmap
 - [X] Create API and attach it to DB
 - [X] Enable authentication on API
 - [X] Secure API behind firewall
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 ### License
 * GPLv3
