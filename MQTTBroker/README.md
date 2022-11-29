@@ -26,6 +26,7 @@ The broker is custom made, and saves every incoming message to the database
 The broker can run idependently, thus not needing the API (or DB).
 
 The broker requires authentication to connect to it.
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 ### Topics
 | Topic | Description |
@@ -54,6 +55,7 @@ The broker requires authentication to connect to it.
 | home/log/info/home                   | Log for home (informative level)
 | home/log/system                      | System log
 | home/log/user                        | User log
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 
 ### Roadmap
@@ -62,6 +64,7 @@ The broker requires authentication to connect to it.
 - [X] Enable write to DB
 - [X] Secure broker behind firewall
 - [ ] Enable SSL connection
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 ### License
 * GPLv3
