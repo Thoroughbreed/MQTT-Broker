@@ -7,7 +7,7 @@ using MQTTAPI.Model;
 
 namespace MQTTAPI.Controllers;
 
-[Authorize]
+// [Authorize]
 [ApiController]
 public class ClimateController
 {

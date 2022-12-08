@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+var config = ConfigHelper.ReadConfig();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -28,8 +29,8 @@ builder.Services.AddAuthentication(options =>
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options =>
 {
-    options.Authority = "https://tved-it.eu.auth0.com/";
-    options.Audience = "https://mqtt-api.tved.it";
+    options.Authority = config.Authority;
+    options.Audience = config.Audience;
 });
 
 var app = builder.Build();
@@ -37,7 +38,6 @@ app.MapControllers();
 
 app.Services.GetService<DbContext>()?.Database.EnsureCreated();
 
-var config = ConfigHelper.ReadConfig();
 var port = config.Port;
 var secPort = config.SecPort;
 
