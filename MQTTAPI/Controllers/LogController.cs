@@ -7,7 +7,7 @@ using MQTTAPI.Model;
 namespace MQTTAPI.Controllers;
 
 [ApiController]
-[Authorize]
+//[Authorize]
 public class LogController
 {
     /// <summary>

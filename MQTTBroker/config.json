@@ -11,6 +11,6 @@
       "Password": "test"
     }
   ],
-  "ConnectionString": "server=localhost;port=3306;database=IntelliHouse;user=intellihouse;password=p@ssw0rd"
-  //  "ConnectionString": "server=mariadb;port=3306;database=IntelliHouse;user=IntelliHouse-User;password=P@ssw0rd" // Used for docker-compose
+//  "ConnectionString": "server=localhost;port=3306;database=IntelliHouse;user=intellihouse;password=p@ssw0rd"
+  "ConnectionString": "server=mariadb;port=3306;database=IntelliHouse;user=IntelliHouse-User;password=P@ssw0rd" // Used for docker-compose
 }
