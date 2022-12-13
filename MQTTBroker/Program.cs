@@ -16,7 +16,12 @@ namespace MQTTBroker
         
         static async Task Main(string[] args)
         {
-            _context.Database.EnsureCreated();
+            while (!await _context.Database.CanConnectAsync())
+            {
+                await Task.Delay(1000);
+            }
+            
+            await _context.Database.EnsureCreatedAsync();
             
             config = ConfigHelper.ReadConfig();
             var option = new MqttServerOptionsBuilder().WithDefaultEndpoint();
