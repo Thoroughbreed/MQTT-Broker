@@ -26,8 +26,17 @@ services:
         - 3306
       ports:
         - 3306:3306
+      volumes:
+        - sql_volume:/sql_datadir
       environment:
         MYSQL_ROOT_PASSWORD: "super-secret-root-password"
         MYSQL_DATABASE: "IntelliHouse"
         MYSQL_USER: "IntelliHouse-User"
         MYSQL_PASSWORD: "P@ssw0rd"
+volumes:
+  sql_volume:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /home/kali/DockerVolumes/SQL
